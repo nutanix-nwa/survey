@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nutanix Survey</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .logo-container {
+      text-align: center;
+    }
+    .logo {
+      max-width: 300px;
+    }
+    .form-centent {
+      margin: auto;
+      width: 80%;
+      padding: 5px;
+      text-align: center;
+    }
+
+    .survey-form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .radio-group label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    
+    .radio-group input[type="radio"] {
+      display: none;
+    }
+    .radio-group label span {
+      position: relative;
+      padding-left: 30px;
+      cursor: pointer;
+      display: inline-block;
+      line-height: 1.2;
+    }
+    .radio-group label span:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #ddd;
+      transition: background-color 0.3s ease;
+    }
+    .radio-group input[type="radio"]:checked + span:before {
+      background-color: #007bff;
+    }
+    .submit-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .submit-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="https://icons.iconarchive.com/icons/simpleicons-team/simple/256/nutanix-icon.png" alt="Nutanix Logo" class="logo">
+  </div>
+  <div class="form-centent">
+  <h1>Nutanix Demo App</h1>
+  <h2>Smartphone Survey</h2>
+  <div class="survey-form">
+    <form action="/survey" method="post">
+      <div class="radio-group">
+        <label><input type="radio" name="device" value="iOS"> <span>iOS</span></label>
+        <label><input type="radio" name="device" value="Android"> <span>Android</span></label>
+      </div>
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

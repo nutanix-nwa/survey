@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nutanix Survey</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .logo-container {
+      text-align: center;
+    }
+    .logo {
+      max-width: 300px;
+    }
+    .form-centent {
+      margin: auto;
+      width: 80%;
+      padding: 5px;
+      text-align: center;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="https://icons.iconarchive.com/icons/simpleicons-team/simple/256/nutanix-icon.png" alt="Nutanix Logo" class="logo">
+  </div>
+  <div class="form-centent">
+    <h1>Nutanix Demo App</h1>
+    <h1>Smartphone Survey</h1>
+
+    
+    <div style="max-width: 800px; margin: auto;">
+      <canvas id="pieChart" width="400" height="400"></canvas>
+      <div id="legend" style="margin-top: 20px;"></div>
+    </div>
+    
+    <script>
+      let pieChart; // Variable to store the chart instance
+    
+      function fetchDataAndRenderChart() {
+        fetch('/get-result')
+          .then(response => response.json())
+          .then(data => {
+            // Process data
+            const labels = data.map(item => item.device);
+            const counts = data.map(item => item.count);
+            const total = counts.reduce((a, b) => a + b, 0);
+    
+            if (pieChart) {
+              pieChart.data.labels = labels;
+              pieChart.data.datasets[0].data = counts;
+              pieChart.update(); // Update existing chart with new data
+            } else {
+              // Create chart for the first time
+              const ctx = document.getElementById('pieChart').getContext('2d');
+              pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: 'Survey Results',
+                    data: counts,
+                    backgroundColor: ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8'], // Customize colors as needed
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false, // Make the chart smaller
+                  plugins: {
+                    // Configure datalabels plugin for slices
+                    datalabels: {
+                      anchor: 'center',
+                      align: 'center',
+                      formatter: (value, context) => {
+                        const data = context.dataset.data;
+                        const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        const percentage = (value / total * 100).toFixed(1) + '%';
+                        return `${value} (${percentage})`; // Display count and percentage
+                      }
+                    }
+                  },
+                  legend: {
+                    display: true,
+                    position: 'right',
+                    labels: {
+                      // Generate legend labels with data numbers and percentages
+                      generateLabels: function(chart) {
+                        const data = chart.data.datasets[0].data;
+                        const labels = chart.data.labels;
+                        const total = data.reduce((a, b) => a + b, 0);
+                        return labels.map((label, index) => {
+                          const count = data[index];
+                          const percentage = (count / total * 100).toFixed(1) + '%';
+                          return {
+                            text: `${label}: ${count} (${percentage})`,
+                            fillStyle: chart.data.datasets[0].backgroundColor[index],
+                            hidden: false,
+                          };
+                        });
+                      }
+                    }
+                  }
+                }
+              });
+            }
+          })
+          .catch(error => console.error('Error fetching data:', error));
+      }
+    
+      // Initial fetch and chart render
+      fetchDataAndRenderChart();
+    
+      // Auto-update chart every 5 seconds
+      setInterval(fetchDataAndRenderChart, 2000); // Update interval in milliseconds
+    </script>
+    
+    
+    
+
+
+
+</div>
+</body>
+</html>

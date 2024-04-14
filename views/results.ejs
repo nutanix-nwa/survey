@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nutanix Survey</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffffff;
+      margin: 0;
+      padding: 0;
+
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+
+      
+    }
+    .logo-container {
+      text-align: center;
+    }
+    .logo {
+      max-width: 300px;
+    }
+    .form-centent {
+      margin: auto;
+      width: 80%;
+      padding: 5px;
+      text-align: center;
+    }
+    #pieChart {
+      opacity: 1;
+      transition: opacity 0.5s ease;
+      width: 400px; /* Adjust width as needed */
+      height: 400px; /* Adjust height as needed */
+    }
+
+    .hidden {
+      opacity: 0;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="https://icons.iconarchive.com/icons/simpleicons-team/simple/256/nutanix-icon.png" alt="Nutanix Logo" class="logo">
+  </div>
+  <div class="form-centent">
+    <h1>Nutanix Demo App</h1>
+    <h2>Smartphone Survey</h2>
+
+    <div style="max-width: 400px; margin: auto; ">
+      <div id="pieChart" style="align-items: center;"></div>
+    </div>
+    
+
+    <script>
+    
+    let chart; // Variable to store the chart instance
+
+    function fetchDataAndRenderChart() {
+      fetch('/get-result')
+        .then(response => response.json())
+        .then(data => {
+          // Validate data (optional)
+          if (!Array.isArray(data)) {
+            console.error('Error: Invalid data format. Expected array of objects.');
+            return;
+          }
+
+          const labels = data.map(item => item.device);
+          const counts = data.map(item => item.count);
+
+          if (!chart) {
+            // If chart instance doesn't exist, create a new chart
+            chart = new ApexCharts(document.getElementById('pieChart'), {
+              chart: {
+                type: 'pie',
+                width: 380,
+              },
+              series: counts,
+              labels: labels,
+              colors: ['#800080', '#4B0082'],
+              legend: {
+                position: 'top',
+                labels: {
+                  formatter: function(val, opts) {
+                    const total = opts.w.globals.series.reduce((a, b) => a + b, 0);
+                    const percentage = ((val / total) * 100).toFixed(1) + '%';
+                    return `${opts.w.config.labels[opts.seriesIndex]}: ${val} (${percentage})`;
+                  }
+                }
+              }
+            });
+
+            chart.render(); // Render the chart for the first time
+          } else {
+            // If chart instance exists, update the data and redraw the chart
+            chart.updateSeries(counts);
+            chart.updateOptions({
+              labels: labels
+            });
+          }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+
+    // Initial fetch and chart render
+    fetchDataAndRenderChart();
+
+    // Auto-update chart every 5 seconds
+    setInterval(fetchDataAndRenderChart, 5000); // Update interval in milliseconds
+  </script>
+
+    
+
+
+
+</div>
+</body>
+</html>
