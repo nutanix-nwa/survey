@@ -99,6 +99,8 @@
               legend: {
                 position: 'top',
                 labels: {
+                  colors: '#FFFFFF',
+                  useSeriesColors: false,
                   formatter: function(val, opts) {
                     const total = opts.w.globals.series.reduce((a, b) => a + b, 0);
                     const percentage = ((val / total) * 100).toFixed(1) + '%';
