@@ -1,9 +1,9 @@
 module.exports = {
-  dbType: 'sqlite', // Change to 'sqlite' for SQLite
+  dbType: 'mysql', // Change to 'sqlite' for SQLite
   mysqlConfig: {
-    host: 'localhost',
+    host: '"@@{mysql.address}@@"',
     user: 'root',
-    password: 'root',
+    password: 'P@ssw0rdP@ssw0rd',
     database: 'survey_db' // Change to your desired database name
   },
   sqliteConfig: {
