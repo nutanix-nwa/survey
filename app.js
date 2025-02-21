@@ -4,7 +4,7 @@ const dbType = config.dbType;
 let db;
 
 if (dbType === 'mysql') {
-  const mysql = require('mysql');
+  const mysql = require('mysql2');
   db = mysql.createConnection(config.mysqlConfig);
 
   // Connect to MySQL and create database if not exists
@@ -64,7 +64,7 @@ app.post('/survey', (req, res) => {
   } else if (dbType === 'sqlite') {
     sql = 'INSERT INTO survey_results (device) VALUES (?)';
   }
-  db.run(sql, [device], (err) => {
+  db.query(sql, [device], (err) => {
     if (err) {
       throw err;
     }
@@ -79,7 +79,7 @@ app.get('/results', (req, res) => {
   } else if (dbType === 'sqlite') {
     sql = 'SELECT device, COUNT(*) AS count FROM survey_results GROUP BY device';
   }
-  db.all(sql, (err, rows) => {
+  db.query(sql, (err, rows) => {
     if (err) {
       throw err;
     }
@@ -94,7 +94,7 @@ app.get('/get-result', (req, res) => {
   } else if (dbType === 'sqlite') {
     sql = 'SELECT device, COUNT(*) AS count FROM survey_results GROUP BY device';
   }
-  db.all(sql, (err, rows) => {
+  db.query(sql, (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Internal Server Error' });
     } else {
@@ -107,4 +107,3 @@ app.get('/get-result', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
